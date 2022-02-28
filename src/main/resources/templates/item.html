@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Item</title>
+    <script th:src="@{../js/script.js}"></script>
+    <script th:src="@{../js/items.js}"></script>
+    <th:block th:insert="fragments/bootstrap"/>
+</head>
+<body>
+<th:block th:insert="fragments/header"/>
+
+<div class="container">
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                    <img class="card-img-top mb-5 mb-md-0"
+                         th:src="${item.titleImageUrl}" alt="..."></div>
+                <div class="col-md-6">
+                    <div class="small mb-1" th:text="${item.series}">model</div>
+                    <h1 class="display-5 fw-bolder" th:text="${item.brand+' '+item.model}">title</h1>
+                    <div class="fs-5 mb-5">
+                        <span th:text="${item.price}+' BYN'">price</span>
+                    </div>
+                    <p class="card-text m-1" th:each="s : ${item.description.split('; ')}" th:text="${s}">
+                        description</p>
+                    <div class="d-flex">
+                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
+                               aria-label="Quantity" style="max-width: 3rem">
+                        <button class="btn btn-outline-dark flex-shrink-0" type="button"
+                                th:onclick="'addToBucket(\'' + ${item.id} + '\');'">
+                            <i class="bi-cart-fill me-1"></i>
+                            Add to bucket
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-5">
+        <div class="container">
+            <table class="table table-striped">
+                <tbody>
+                <tr th:each="paramsGroup : ${item.params}">
+                    <td th:text="${paramsGroup.getKey()}">paramsGroupName</td>
+                    <td>
+                        <table class="table-borderless align-content-center w-100">
+                            <tr th:each="params : ${paramsGroup.getValue()}">
+                                <td class="col-6" th:text="${params.getKey()}">param name</td>
+                                <td class="col-6" th:text="${params.getValue()}">param value</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <section class="py-5 bg-light">
+        <div class="container px-4 px-lg-5 mt-5">
+            <h2 class="fw-bolder mb-4">Related products</h2>
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <div class="col mb-5" th:each="rate : ${ratable}">
+                    <div class="card h-100">
+                        <img class="card-img-top p-3" height="200" th:src="${rate.titleImageUrl}" alt="...">
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h6 class="card-title" th:text="${rate.brand+' '+rate.model}">brand+model</h6>
+                                <p class="card-text m-1" th:each="s : ${rate.description.split('; ')}"
+                                   th:text="${s+';'}">description</p>
+                                <span th:text="${rate.price}+' BYN'">price</span>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    th:onclick="'ref(\'/market/'+${rate.id}+'\')'">More info
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    th:onclick="'addToBucket(\'' + ${rate.id} + '\');'">Add to Bucket
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<th:block th:insert="fragments/footer"/>
+</body>
+</html>

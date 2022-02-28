@@ -1,0 +1,61 @@
+.label {
+    margin: 0.5em;
+    font-size: 39px;
+    padding: 10px;
+}
+
+.navButtonRef {
+    margin: 5px;
+    padding: 1px;
+    font-size: 23px;
+    /* font-family: monospace; */
+}
+
+.navBar {
+    height: 100%;
+    position: absolute;
+    /* float: right; */
+}
+
+.header {
+    position: absolute;
+    width: 100%;
+    height: 16%;
+    margin: 0;
+    background: #00000038;
+}
+
+body {
+    margin: 0;
+    font-size: large;
+}
+
+.companyName {
+    background: #0604042e;
+    float: left;
+    margin: 0;
+    /* padding: 0.5em; */
+}
+
+.menu {
+    background: hsl(0deg 0% 0% / 17%);
+    right: 10%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.userIcon {
+    background: #0000002e;
+    width: 7%;
+    right: 0;
+    /* height: 100%; */
+    /* padding: 5px; */
+    /* margin: 0; */
+}
+
+.navButton {
+    position: static;
+    padding: 18px;
+    margin: 0px;
+    float: left;
+}

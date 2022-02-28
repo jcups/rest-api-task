@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <script th:src="@{../js/script.js}"></script>
+    <script th:src="@{../js/items.js}"></script>
+    <th:block th:insert="fragments/bootstrap"/>
+</head>
+<body>
+<th:block th:insert="fragments/header"/>
+<th:block sec:authorize="hasAnyRole('ADMIN','CREATOR')">
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" th:action="@{/add}">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+    </form>
+</th:block>
+<th:block th:insert="fragments/footer"/>
+</body>
+</html>

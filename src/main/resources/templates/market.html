@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Market</title>
+    <th:block th:insert="fragments/bootstrap"/>
+    <script th:src="@{../js/script.js}"></script>
+<!--    <script src="../static/js/script.js"></script>-->
+<!--    <script src="../static/js/items.js"></script>-->
+    <script th:src="@{../js/items.js}"></script>
+</head>
+<body>
+<th:block th:insert="fragments/header"/>
+
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="items"></div>
+    </div>
+</div>
+<script>loadData()</script>
+<th:block th:insert="fragments/footer"/>
+</body>
+</html>

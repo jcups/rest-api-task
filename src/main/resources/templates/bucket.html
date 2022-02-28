@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Bucket</title>
+    <th:block th:insert="fragments/bootstrap"/>
+    <script th:src="@{../js/script.js}"></script>
+    <script th:src="@{../js/items.js}"></script>
+    <script th:src="@{../js/bucket.js}"></script>
+</head>
+<body>
+<th:block th:insert="fragments/header"/>
+<div class="container">
+    <section class="py-5">
+        <table class="table-striped" id="bucket">
+
+        </table>
+    </section>
+</div>
+<th:block th:insert="fragments/footer"/>
+
+<script>loadBucket()</script>
+</body>
+</html>
