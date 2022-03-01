@@ -1,6 +1,8 @@
 package ru.jcups.restapitask.service.impl;
 
 import org.hibernate.ObjectNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.repository.CrudRepository;
 import ru.jcups.restapitask.model.DefaultEntity;
 import ru.jcups.restapitask.service.CrudService;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class DefaultCrudService<T extends DefaultEntity> implements CrudService<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultCrudService.class);
 
     private final CrudRepository<T, Long> repository;
     protected Class<? extends DefaultEntity> clazz;
@@ -22,15 +26,15 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public T create(T t) {
-        System.out.println("DefaultCrudService.create");
-        System.out.println("t = " + t);
+        logger.info(clazzName+".create");
+        logger.info("create() called with: t = [" + t + "]");
         return repository.save(t);
     }
 
     @Override
     public T update(T t) {
-        System.out.println("DefaultCrudService.update");
-        System.out.println("t = " + t);
+        logger.info(clazzName+".update");
+        logger.info("update() called with: t = [" + t + "]");
         if (repository.existsById(t.getId())) {
             Optional<T> entity = repository.findById(t.getId());
             T found;
@@ -46,7 +50,7 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public List<T> getAll() {
-        System.out.println("DefaultCrudService.getAll");
+        logger.info(clazzName+".getAll");
         List<T> result = (List<T>) repository.findAll();
         if (result.isEmpty())
             throw new ObjectNotFoundException(clazz, clazzName);
@@ -55,8 +59,8 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public T getById(long id) {
-        System.out.println("DefaultCrudService.getById");
-        System.out.println("id = " + id);
+        logger.info(clazzName+".getById");
+        logger.info("getById() called with: id = [" + id + "]");
         Optional<T> found = repository.findById(id);
         if (found.isPresent())
             return found.get();
@@ -66,8 +70,8 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public boolean delete(T t) {
-        System.out.println("DefaultCrudService.delete");
-        System.out.println("t = " + t);
+        logger.info(clazzName+".delete");
+        logger.info("delete() called with: t = [" + t + "]");
         if (repository.existsById(t.getId()))
             repository.delete(t);
         else
@@ -77,8 +81,8 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public boolean deleteById(long id) {
-        System.out.println("DefaultCrudService.deleteById");
-        System.out.println("id = " + id);
+        logger.info(clazzName+".deleteById");
+        logger.info("deleteById() called with: id = [" + id + "]");
         if (repository.existsById(id))
             repository.deleteById(id);
         else
@@ -87,6 +91,7 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
     }
 
     private void init() {
+        logger.info("DefaultCrudService.init");
         Class<?> actualClass = this.getClass();
         ParameterizedType type = (ParameterizedType) actualClass.getGenericSuperclass();
         clazz = (Class<T>) type.getActualTypeArguments()[0];

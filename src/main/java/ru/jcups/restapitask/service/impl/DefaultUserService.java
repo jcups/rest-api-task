@@ -1,5 +1,7 @@
 package ru.jcups.restapitask.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +20,8 @@ import java.util.Set;
 @Service
 public class DefaultUserService extends DefaultCrudService<User> implements UserDetailsService, UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultUserService.class);
+
     private final UserRepository userRepository;
     private final BucketService bucketService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -31,8 +35,8 @@ public class DefaultUserService extends DefaultCrudService<User> implements User
 
     @Override
     public User create(User user) {
-        System.out.println("DefaultUserService.create");
-        System.out.println("user = " + user);
+        logger.info("DefaultUserService.create");
+        logger.info("create() called with: user = [" + user + "]");
         if (user.getRoles() == null)
             user.setRoles(Set.of(Role.ROLE_USER));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -40,18 +44,20 @@ public class DefaultUserService extends DefaultCrudService<User> implements User
         if (user.getBucket() == null) {
             bucketService.create(new Bucket(created, List.of()));
         }
+        logger.debug("DefaultUserService.create() returned: " + created);
         return created;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("DefaultUserService.loadUserByUsername");
-        System.out.println("username = " + username);
+        logger.info("DefaultUserService.loadUserByUsername");
+        logger.info("loadUserByUsername() called with: username = [" + username + "]");
         User user = userRepository.findUserByUsername(username);
         System.out.println(user);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
+        logger.debug("DefaultUserService.loadUserByUsername() returned: " + user);
         return user;
     }
 }

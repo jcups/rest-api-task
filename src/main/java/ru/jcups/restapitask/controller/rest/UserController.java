@@ -2,6 +2,8 @@ package ru.jcups.restapitask.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +18,14 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
 
     @PostMapping("")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
-        System.out.println("UserController.createUser");
-        System.out.println("user = " + user);
+        logger.info("UserController.createUser");
+        logger.info("createUser() called with: user = [" + user + "]");
         User created = userService.create(user);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
 
@@ -29,8 +33,8 @@ public class UserController {
 
     @PutMapping("")
     public ResponseEntity<User> updateUser(@Valid @RequestBody User user) {
-        System.out.println("UserController.updateUser");
-        System.out.println("user = " + user);
+        logger.info("UserController.updateUser");
+        logger.info("updateUser() called with: user = [" + user + "]");
         try {
             User updated = userService.update(user);
             return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -42,8 +46,8 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable long id) {
-        System.out.println("UserController.deleteById");
-        System.out.println("id = " + id);
+        logger.info("UserController.deleteById");
+        logger.info("deleteById() called with: id = [" + id + "]");
         try {
             return userService.deleteById(id) ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
         } catch (ObjectNotFoundException e) {
@@ -54,7 +58,7 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<List<User>> getAll() {
-        System.out.println("UserController.getAll");
+        logger.info("UserController.getAll");
         try {
             return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
         } catch (ObjectNotFoundException e) {
@@ -65,8 +69,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getById(@PathVariable long id) {
-        System.out.println("UserController.getById");
-        System.out.println("id = " + id);
+        logger.info("UserController.getById");
+        logger.info("getById() called with: id = [" + id + "]");
         try {
             User found = userService.getById(id);
             return new ResponseEntity<>(found, HttpStatus.OK);

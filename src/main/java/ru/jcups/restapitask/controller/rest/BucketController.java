@@ -1,6 +1,8 @@
 package ru.jcups.restapitask.controller.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/bucket")
 public class BucketController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BucketController.class);
+
     private final BucketService bucketService;
     private final HttpHeaders headers;
 
@@ -27,8 +31,8 @@ public class BucketController {
 
     @GetMapping
     public ResponseEntity<?> getBucket(Authentication authentication, HttpSession session) {
-        System.out.println("BucketController.getBucket");
-        System.out.println("authentication = " + authentication + ", session = " + session);
+        logger.info("BucketController.getBucket");
+        logger.info("getBucket() called with: authentication = [" + authentication + "], session = [" + session + "]");
         if (authentication != null) {
             User user = (User) authentication.getPrincipal();
             return processAuthenticated(user);
@@ -41,10 +45,13 @@ public class BucketController {
 
     @GetMapping("/d")
     public ResponseEntity<?> getBucketForDebug() {
+        logger.info("BucketController.getBucketForDebug");
         return new ResponseEntity<>(cachedBucketForDebug, headers, HttpStatus.OK);
     }
 
     private ResponseEntity<?> processGuest(HttpSession session) {
+        logger.info("BucketController.processGuest");
+        logger.info("processGuest() called with: session = [" + session + "]");
         Guest guest = (Guest) session.getAttribute("guest");
         if (guest != null) {
             Bucket bucket = guest.getBucket();
@@ -60,6 +67,8 @@ public class BucketController {
     }
 
     private ResponseEntity<?> processAuthenticated(User user) {
+        logger.info("BucketController.processAuthenticated");
+        logger.info("processAuthenticated() called with: user = [" + user + "]");
         if (user.getId() != 0) {
             Bucket bucket = user.getBucket();
             if (bucket != null) {

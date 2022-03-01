@@ -2,6 +2,8 @@ package ru.jcups.restapitask.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,27 +23,27 @@ import java.util.Set;
 @Controller
 public class HomeController {
 
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     private final ItemService itemService;
 
     @GetMapping("")
     public String index(HttpSession session, Guest guest) {
-        System.out.println("HomeController.index");
-        System.out.println("session = " + session);
-        System.out.println("session.getId() = " + session.getId());
-        System.out.println("guest = " + guest);
+        logger.info("HomeController.index");
+        logger.info("index() called with: session = [" + session + "], guest = [" + guest + "]");
         return "index";
     }
 
     @GetMapping("/market")
     public String market() {
-        System.out.println("HomeController.market");
+        logger.info("HomeController.market");
         return "market";
     }
 
     @GetMapping("/market/{id}")
     public String item(@PathVariable long id, Model model){
-        System.out.println("HomeController.item");
-        System.out.println("id = " + id + ", \nmodel = " + model);
+        logger.info("HomeController.item");
+        logger.info("item() called with: id = [" + id + "], model = [" + model + "]");
         try {
             model.addAttribute("item", itemService.getById(id));
             model.addAttribute("ratable", itemService.getFourItemsWithBiggestRate());
@@ -54,8 +56,8 @@ public class HomeController {
 
     @GetMapping("/add")
     public String add(@RequestParam String url, Authentication authentication) {
-        System.out.println("HomeController.add");
-        System.out.println("url = " + url + ", \nauthentication = " + authentication);
+        logger.info("HomeController.add");
+        logger.info("add() called with: url = [" + url + "], authentication = [" + authentication + "]");
         if (authentication != null) {
             User user = (User) authentication.getPrincipal();
             Set<Role> roles = user.getRoles();

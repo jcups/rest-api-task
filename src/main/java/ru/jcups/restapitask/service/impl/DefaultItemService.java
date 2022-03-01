@@ -1,5 +1,7 @@
 package ru.jcups.restapitask.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.jcups.restapitask.model.Bucket;
 import ru.jcups.restapitask.model.Item;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class DefaultItemService extends DefaultCrudService<Item> implements ItemService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DefaultItemService.class);
+
     private final ItemRepository itemRepository;
     private final UserService userService;
 
@@ -25,6 +29,8 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
 
     @Override
     public void addToBucket(long id, User user, int quantity) {
+        logger.info("DefaultItemService.addToBucket");
+        logger.info("addToBucket() called with: id = [" + id + "], user = [" + user + "], quantity = [" + quantity + "]");
         assert id != 0L;
         assert user != null;
         user = userService.getById(user.getId());
@@ -36,6 +42,8 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
 
     @Override
     public void plusView(long id) {
+        logger.info("DefaultItemService.plusView");
+        logger.info("plusView() called with: id = [" + id + "]");
         Item item = this.getById(id);
         item.plusView();
         this.update(item);
@@ -43,6 +51,8 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
 
     @Override
     public void newRate(long id, float rate) {
+        logger.info("DefaultItemService.newRate");
+        logger.info("newRate() called with: id = [" + id + "], rate = [" + rate + "]");
         Item item = this.getById(id);
         item.processRate(rate);
         this.update(item);
@@ -50,17 +60,25 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
 
     @Override
     public List<Item> getFourItemsWithBiggestRate() {
+        logger.info("DefaultItemService.getFourItemsWithBiggestRate");
+        logger.info("getFourItemsWithBiggestRate() called");
         List<Item> items = this.getAllByRateBetween(0, 5);
         if (items.size() > 4) {
             List<Item> list = items.stream().sorted((o1, o2) -> Float.compare(o1.getRate(), o2.getRate()))
                     .limit(4).collect(Collectors.toList());
+            logger.debug("DefaultItemService.getFourItemsWithBiggestRate() returned: " + list);
             return list;
         }
+        logger.debug("DefaultItemService.getFourItemsWithBiggestRate() returned: " + items);
         return items;
     }
 
     @Override
     public List<Item> getAllByRateBetween(float from, float to) {
-        return itemRepository.getAllByRateBetween(from, to);
+        logger.info("DefaultItemService.getAllByRateBetween");
+        logger.info("getAllByRateBetween() called with: from = [" + from + "], to = [" + to + "]");
+        List<Item> items = itemRepository.getAllByRateBetween(from, to);
+        logger.debug("DefaultItemService.getAllByRateBetween() returned: " + items);
+        return items;
     }
 }

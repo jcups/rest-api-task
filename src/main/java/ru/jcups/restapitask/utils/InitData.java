@@ -1,6 +1,8 @@
 package ru.jcups.restapitask.utils;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.jcups.restapitask.model.Role;
@@ -8,6 +10,7 @@ import ru.jcups.restapitask.model.User;
 import ru.jcups.restapitask.service.ItemService;
 import ru.jcups.restapitask.service.UserService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -15,6 +18,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Component
 public class InitData implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(InitData.class);
 
     private final UserService userService;
     private final ItemService itemService;
@@ -60,6 +65,54 @@ public class InitData implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        logger.info("InitData.run");
+        logger.info("run() called with: args = [" + Arrays.toString(args) + "]");
+        createAdmin();
+        createUsers(9);
+        initItems();
+    }
+
+    private void initItems() {
+        logger.info("InitData.initItems");
+        uris.stream().map(ItemParser::parseItem).peek(item -> System.out.println("item = " + item))
+                .forEach(itemService::create);
+    }
+
+    private void createUsers(int count) {
+        logger.info("InitData.createUsers");
+        logger.info("createUsers() called with: count = [" + count + "]");
+        for (int i = 1; i <= count; i++) {
+            User user = createRandomUser();
+            try {
+                userService.create(user);
+            } catch (Exception e) {
+                logger.error("InitData.run: ", e);
+            }
+        }
+    }
+
+    private User createRandomUser() {
+        logger.info("InitData.createRandomUser");
+        int age = 18 + random.nextInt(47);
+        String firstName = names.get(random.nextInt(names.size()));
+        String lastName = lastNames.get(random.nextInt(names.size()));
+        String email = String.format("%s.%s.%d@mail.com", firstName, lastName, age);
+        String username = firstName + "-" + lastName + "-" + age;
+        User user = User.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .username(username)
+                .password(firstName)
+                .roles(Set.of(Role.ROLE_USER))
+                .age(age)
+                .build();
+        logger.debug("InitData.createRandomUser() returned: " + user);
+        return user;
+    }
+
+    private void createAdmin() {
+        logger.info("InitData.createAdmin");
         userService.create(User.builder()
                 .firstName("name")
                 .lastName("lastName")
@@ -69,30 +122,5 @@ public class InitData implements CommandLineRunner {
                 .email("admin@gmail.com")
                 .password("pass")
                 .build());
-
-        for (int i = 1; i <= 10; i++) {
-            int age = 18 + random.nextInt(47);
-            String firstName = names.get(random.nextInt(names.size()));
-            String lastName = lastNames.get(random.nextInt(names.size()));
-            String email = String.format("%s.%s.%d@mail.com", firstName, lastName, age);
-            String username = firstName + "-" + lastName + "-" + age;
-            User user = User.builder()
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .email(email)
-                    .username(username)
-                    .password(firstName)
-                    .roles(Set.of(Role.ROLE_USER))
-                    .age(age)
-                    .build();
-            try {
-                userService.create(user);
-            } catch (Exception e) {
-                System.out.println("InitData.run");
-                System.out.println("e.getMessage() = " + e.getMessage());
-            }
-        }
-        uris.stream().map(ItemParser::parseItem).peek(item -> System.out.println("item = " + item))
-                .forEach(itemService::create);
     }
 }

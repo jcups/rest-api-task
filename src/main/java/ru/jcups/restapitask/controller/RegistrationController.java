@@ -1,6 +1,8 @@
 package ru.jcups.restapitask.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,20 +20,22 @@ import javax.validation.Valid;
 @RequestMapping("/registration")
 public class RegistrationController {
 
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
+
     private final DefaultUserService userService;
 
     @GetMapping
     public String registration(Model model) {
-        System.out.println("RegistrationController.registration");
-        System.out.println("model = " + model);
+        logger.info("RegistrationController.registration");
+        logger.info("registration() called with: model = [" + model + "]");
         model.addAttribute("userForm", new User());
         return "registration";
     }
 
     @PostMapping
     public String registrationNewUser(@Valid User user, HttpSession session) {
-        System.out.println("RegistrationController.registrationNewUser");
-        System.out.println("user = " + user);
+        logger.info("RegistrationController.registrationNewUser");
+        logger.info("registrationNewUser() called with: user = [" + user + "], session = [" + session + "]");
         if (user.getPassword().equals(user.getConfirmPassword())) {
             Guest guest = (Guest) session.getAttribute("guest");
             if (guest !=null){

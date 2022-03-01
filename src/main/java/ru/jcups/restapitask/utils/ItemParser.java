@@ -4,6 +4,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.jcups.restapitask.model.Item;
 
 import java.io.BufferedReader;
@@ -16,9 +18,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-//@Service
 public class ItemParser {
 
+    private static final Logger logger = LoggerFactory.getLogger(ItemParser.class);
 
     private static String model;
     private static String brand;
@@ -26,7 +28,8 @@ public class ItemParser {
     private static Map<String, Map<String, String>> mParams;
 
     public static Item parseItem(String uri) {
-        System.out.println("ItemParser.parseItem");
+        logger.info("ItemParser.parseItem");
+        logger.info("parseItem() called with: uri = [" + uri + "]");
         Document document = getDocument(uri);
         return Item.builder()
                 .titleImageUrl(getTitleImageUrl(document))
@@ -46,7 +49,6 @@ public class ItemParser {
                 .attributes().get("src").replaceFirst("/[0-9]{3}/", "/big/");
     }
 
-    //  Ноутбук ASUS TUF Gaming F15 FX506LH-HN002
     private static String getTitle(Document document) {
         brand = "";
         series = "";

@@ -2,6 +2,8 @@ package ru.jcups.restapitask.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,31 +23,38 @@ import java.util.List;
 @RequestMapping("/api/items")
 public class ItemController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
+
     private final ItemService itemService;
     private final UserService userService;
     private final HttpHeaders headers;
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> rate(@PathVariable long id, @RequestParam("rate") float rate) {
+        logger.info("ItemController.rate");
+        logger.info("rate() called with: id = [" + id + "], rate = [" + rate + "]");
         itemService.newRate(id, rate);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("")
     public ResponseEntity<List<Item>> getItems() {
-        System.out.println("ItemController.getItems");
+        logger.info("ItemController.getItems");
         try {
-            return new ResponseEntity<>(itemService.getAll(),
+            ResponseEntity<List<Item>> response = new ResponseEntity<>(itemService.getAll(),
                     headers, HttpStatus.OK);
+            logger.debug("ItemController.getItems() returned: " + response);
+            return response;
         } catch (ObjectNotFoundException e) {
+            logger.error("ItemController.getItems: ", e);
             return ResponseEntity.noContent().build();
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Item> findById(@PathVariable long id) {
-        System.out.println("ItemController.findById");
-        System.out.println("id = " + id);
+        logger.info("ItemController.findById");
+        logger.info("findById() called with: id = [" + id + "]");
         try {
             return new ResponseEntity<>(itemService.getById(id),
                     headers, HttpStatus.OK);
@@ -58,9 +67,9 @@ public class ItemController {
     @GetMapping("/add/{id}")
     public ResponseEntity<?> addToBucket(@PathVariable long id, Authentication authentication, HttpSession session,
                                          @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity) {
-        System.out.println("ItemController.addToBucket");
-        System.out.println("id = " + id + ", authentication = " + authentication +
-                ", session = " + session + ", quantity = " + quantity);
+        logger.info("ItemController.addToBucket");
+        logger.info("addToBucket() called with: id = [" + id + "], authentication = [" + authentication +
+                "], session = [" + session + "], quantity = [" + quantity + "]");
         if (authentication != null) {
             return processAuthenticated(id, authentication, quantity);
         } else if (session != null) {
@@ -71,6 +80,8 @@ public class ItemController {
     }
 
     private ResponseEntity<Object> processGuest(long id, HttpSession session, int quantity) {
+        logger.info("ItemController.processGuest");
+        logger.info("processGuest() called with: id = [" + id + "], session = [" + session + "], quantity = [" + quantity + "]");
         try {
             Guest guest = (Guest) session.getAttribute("guest");
             if (guest == null) {
@@ -86,6 +97,9 @@ public class ItemController {
     }
 
     private ResponseEntity<Object> processAuthenticated(long id, Authentication authentication, int quantity) {
+        logger.info("ItemController.processAuthenticated");
+        logger.info("processAuthenticated() called with: id = [" + id +
+                "], authentication = [" + authentication + "], quantity = [" + quantity + "]");
         try {
             User user = (User) authentication.getPrincipal();
             if (user != null) {
