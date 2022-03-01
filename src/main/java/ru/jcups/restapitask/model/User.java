@@ -140,6 +140,6 @@ public class User extends DefaultEntity implements UserDetails {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + roles +
-                "}\n";
+                "}";
     }
 }

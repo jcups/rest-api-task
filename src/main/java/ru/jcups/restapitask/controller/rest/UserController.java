@@ -22,6 +22,7 @@ public class UserController {
 
     private final UserService userService;
 
+    // TODO: 01.03.2022 Сделать страницу Users доступную Админу и создателю
     @PostMapping("")
     public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         logger.info("UserController.createUser");

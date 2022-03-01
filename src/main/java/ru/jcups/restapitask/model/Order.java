@@ -70,14 +70,14 @@ public class Order extends DefaultEntity {
 
     @Override
     public String toString() {
-        return "\nOrder{" +
-                "\n\tid=" + id +
-                ", \n\tcreatedDate=" + createdDate +
-                ", \n\tupdateDate=" + updateDate +
-                ", \n\tuser=" + user +
-                ", \n\tsum=" + sum +
-                ", \n\tstatus=" + status +
-                ", \n\titems=" + items +
+        return "Order{" +
+                "id=" + id +
+                ", createdDate=" + createdDate +
+                ", updateDate=" + updateDate +
+                ", user=" + user +
+                ", sum=" + sum +
+                ", status=" + status +
+                ", items=" + items +
                 '}';
     }
 

@@ -8,7 +8,9 @@
     <th:block th:insert="fragments/bootstrap"/>
 </head>
 <body>
+<!--todo    На главную страницу нужен контент, какой?-->
 <th:block th:insert="fragments/header"/>
+
 <th:block sec:authorize="hasAnyRole('ADMIN','CREATOR')">
     <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" th:action="@{/add}">
         <input type="search" class="form-control" placeholder="Search..." aria-label="Search">

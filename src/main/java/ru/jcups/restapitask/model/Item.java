@@ -41,27 +41,12 @@ public class Item extends DefaultEntity {
     @Column(nullable = false)
     String description;
 
-    float rate;
-
-    long countRates;
-
-    long views;
 
     @ElementCollection(fetch = FetchType.EAGER)
     Set<String> allImagesUrls;
 
     @ElementCollection(fetch = FetchType.EAGER,targetClass = LinkedHashMap.class)
     Map<String, Map<String, String>> params;
-
-    public void processRate(float stars) {
-        if (stars >= 0 && stars <= 5) {
-            this.rate = (rate * countRates + stars) / ++countRates;
-        }
-    }
-
-    public void plusView() {
-        views++;
-    }
 
     @Override
     public void refresh(DefaultEntity entity) {
@@ -78,12 +63,6 @@ public class Item extends DefaultEntity {
             this.allImagesUrls = item.allImagesUrls;
         if (item.params != null)
             this.params = item.params;
-        if (item.views != 0)
-            this.views = item.views;
-        if (item.rate != 0)
-            this.rate = item.rate;
-        if (item.countRates != 0)
-            this.countRates = item.countRates;
     }
 
     @Override
@@ -102,11 +81,11 @@ public class Item extends DefaultEntity {
 
     @Override
     public String toString() {
-        return "\nItem{" +
-                "\n\tid=" + id +
-                ", \n\ttitle='" + title + '\'' +
-                ", \n\tprice=" + price +
-                ", \n\tdescription='" + description + '\'' +
+        return "Item{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                ", description='" + description.replaceAll("\n", "\\n") + '\'' +
                 '}';
     }
 }

@@ -11,10 +11,33 @@
 <body>
 <th:block th:insert="fragments/header"/>
 <div class="container">
-    <section class="py-5">
-        <table class="table-striped" id="bucket">
-
+    <section class="py-5 align-content-center">
+        <h3>Your Bucket</h3>
+        <table class="table table-borderless w-100">
+            <thead>
+            <tr class="row">
+                <th class="col-2 align-self-center "></th>
+                <th class="col-3 align-self-center ">Title</th>
+                <th class="col-1 align-self-center text-center">Quantity</th>
+                <th class="col-2 align-self-center text-center">Price for one item</th>
+                <th class="col-2 align-self-center text-center">Price for all items</th>
+                <th class="col-2 align-self-center text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="bucket">
+            </tbody>
         </table>
+        <div class="d-flex bd-highlight">
+            <div class="p-2 w-25 bd-highlight align-self-center">
+                <div class="w-100 fs-4 text-center">Total items: <span id="totalCount">0</span></div>
+            </div>
+            <div class="p-2 w-50 bd-highlight">
+                <button class="btn btn-primary btn-lg w-100" type="button">Place your order</button>
+            </div>
+            <div class="p-2 w-25 bd-highlight align-self-center">
+                <div class="w-100 fs-4 text-center">Total sum: <span id="totalSum">0</span> BYN</div>
+            </div>
+        </div>
     </section>
 </div>
 <th:block th:insert="fragments/footer"/>

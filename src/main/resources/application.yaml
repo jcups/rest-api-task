@@ -6,23 +6,29 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
   flyway:
     baseline-on-migrate: true
-  main:
-    allow-circular-references: true
-#  session:
-#    timeout: 15m
+#  main:
+#    allow-circular-references: true
 logging:
   level:
     org.springframework:
       web: debug
       security: debug
+      jdbc:
+        core:
+          JdbcTemplate: DEBUG
+          StatementCreatorUtils: TRACE
+    org:
+      hibernate:
+        SQL: debug
+        type.descriptor.sql.BasicBinder: trace
 #    org.postgresql: debug
-server:
-  servlet:
-    session:
-      timeout: 15m
-      cookie:
-        http-only: true
-        secure: true
+#server:
+#  servlet:
+#    session:
+#      timeout: 15m
+#      cookie:
+#        http-only: true
+#        secure: true

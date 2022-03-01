@@ -40,45 +40,19 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
         userService.update(user);
     }
 
-    @Override
-    public void plusView(long id) {
-        logger.info("DefaultItemService.plusView");
-        logger.info("plusView() called with: id = [" + id + "]");
-        Item item = this.getById(id);
-        item.plusView();
-        this.update(item);
-    }
 
     @Override
-    public void newRate(long id, float rate) {
-        logger.info("DefaultItemService.newRate");
-        logger.info("newRate() called with: id = [" + id + "], rate = [" + rate + "]");
-        Item item = this.getById(id);
-        item.processRate(rate);
-        this.update(item);
-    }
-
-    @Override
-    public List<Item> getFourItemsWithBiggestRate() {
-        logger.info("DefaultItemService.getFourItemsWithBiggestRate");
-        logger.info("getFourItemsWithBiggestRate() called");
-        List<Item> items = this.getAllByRateBetween(0, 5);
+    public List<Item> getItemsLimitFour() {
+        logger.info("DefaultItemService.getItemsLimitFour");
+        logger.info("getItemsLimitFour() called");
+        List<Item> items = this.getAll();
         if (items.size() > 4) {
-            List<Item> list = items.stream().sorted((o1, o2) -> Float.compare(o1.getRate(), o2.getRate()))
-                    .limit(4).collect(Collectors.toList());
-            logger.debug("DefaultItemService.getFourItemsWithBiggestRate() returned: " + list);
+            List<Item> list = items.stream().limit(4).collect(Collectors.toList());
+            logger.debug("DefaultItemService.getItemsLimitFour() returned: " + list);
             return list;
         }
-        logger.debug("DefaultItemService.getFourItemsWithBiggestRate() returned: " + items);
+        logger.debug("DefaultItemService.getItemsLimitFour() returned: " + items);
         return items;
     }
 
-    @Override
-    public List<Item> getAllByRateBetween(float from, float to) {
-        logger.info("DefaultItemService.getAllByRateBetween");
-        logger.info("getAllByRateBetween() called with: from = [" + from + "], to = [" + to + "]");
-        List<Item> items = itemRepository.getAllByRateBetween(from, to);
-        logger.debug("DefaultItemService.getAllByRateBetween() returned: " + items);
-        return items;
-    }
 }

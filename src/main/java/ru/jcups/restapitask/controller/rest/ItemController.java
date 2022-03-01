@@ -7,15 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import ru.jcups.restapitask.model.Guest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.jcups.restapitask.model.Item;
-import ru.jcups.restapitask.model.User;
 import ru.jcups.restapitask.service.ItemService;
 import ru.jcups.restapitask.service.UserService;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -29,13 +28,7 @@ public class ItemController {
     private final UserService userService;
     private final HttpHeaders headers;
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<?> rate(@PathVariable long id, @RequestParam("rate") float rate) {
-        logger.info("ItemController.rate");
-        logger.info("rate() called with: id = [" + id + "], rate = [" + rate + "]");
-        itemService.newRate(id, rate);
-        return ResponseEntity.ok().build();
-    }
+    // TODO: 01.03.2022 Добавить страницу добавления товара доступную Модератору, Админу и Создателю
 
     @GetMapping("")
     public ResponseEntity<List<Item>> getItems() {
@@ -58,55 +51,6 @@ public class ItemController {
         try {
             return new ResponseEntity<>(itemService.getById(id),
                     headers, HttpStatus.OK);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/add/{id}")
-    public ResponseEntity<?> addToBucket(@PathVariable long id, Authentication authentication, HttpSession session,
-                                         @RequestParam(value = "quantity", required = false, defaultValue = "1") int quantity) {
-        logger.info("ItemController.addToBucket");
-        logger.info("addToBucket() called with: id = [" + id + "], authentication = [" + authentication +
-                "], session = [" + session + "], quantity = [" + quantity + "]");
-        if (authentication != null) {
-            return processAuthenticated(id, authentication, quantity);
-        } else if (session != null) {
-            return processGuest(id, session, quantity);
-        } else {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    private ResponseEntity<Object> processGuest(long id, HttpSession session, int quantity) {
-        logger.info("ItemController.processGuest");
-        logger.info("processGuest() called with: id = [" + id + "], session = [" + session + "], quantity = [" + quantity + "]");
-        try {
-            Guest guest = (Guest) session.getAttribute("guest");
-            if (guest == null) {
-                guest = new Guest();
-                session.setAttribute("guest", guest);
-            }
-            guest.addItemToBucket(itemService.getById(id), quantity);
-            return ResponseEntity.ok().build();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    private ResponseEntity<Object> processAuthenticated(long id, Authentication authentication, int quantity) {
-        logger.info("ItemController.processAuthenticated");
-        logger.info("processAuthenticated() called with: id = [" + id +
-                "], authentication = [" + authentication + "], quantity = [" + quantity + "]");
-        try {
-            User user = (User) authentication.getPrincipal();
-            if (user != null) {
-                itemService.addToBucket(id, user, quantity);
-                return ResponseEntity.ok().build();
-            } else
-                return ResponseEntity.badRequest().build();
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();

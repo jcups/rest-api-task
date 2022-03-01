@@ -12,6 +12,7 @@ import java.util.Arrays;
 public class RestApiTaskApplication {
     private static final Logger logger = LoggerFactory.getLogger(RestApiTaskApplication.class);
 
+    // TODO: 01.03.2022 А может сделаем свою заставку? Которая при старте приложения запускается(Spring)
     public static void main(String[] args) {
         logger.info("RestApiTaskApplication.main");
         logger.info("main() called with: args = [" + Arrays.toString(args) + "]");

@@ -79,6 +79,9 @@ public class ItemParser {
 
     private static BigDecimal getPrice(Document document) {
         Elements elements = document.getElementsByClass("spec-about__price");
+        if (elements.isEmpty()) {
+            return new BigDecimal("3141.56");
+        }
         Element element = elements.get(0);
         String text = element
                 .text();

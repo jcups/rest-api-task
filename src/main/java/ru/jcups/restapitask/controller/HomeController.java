@@ -46,7 +46,7 @@ public class HomeController {
         logger.info("item() called with: id = [" + id + "], model = [" + model + "]");
         try {
             model.addAttribute("item", itemService.getById(id));
-            model.addAttribute("ratable", itemService.getFourItemsWithBiggestRate());
+            model.addAttribute("ratable", itemService.getItemsLimitFour());
         } catch (ObjectNotFoundException e){
             e.printStackTrace();
             return "redirect:/market";
@@ -54,6 +54,7 @@ public class HomeController {
         return "item";
     }
 
+    // TODO: 01.03.2022 Рассортировать методы по логически связанным углам и конечным точнам
     @GetMapping("/add")
     public String add(@RequestParam String url, Authentication authentication) {
         logger.info("HomeController.add");

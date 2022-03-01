@@ -5,7 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class RestApiTaskApplicationTests {
-
+    // TODO: 01.03.2022 Начать писать блядские тесты
     @Test
     void contextLoads() {
     }
