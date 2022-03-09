@@ -9,15 +9,45 @@
 </head>
 <body>
 <th:block th:insert="fragments/header"/>
-<!--todo    Добавить кнопки для перелистывания фотографий-->
 <div class="container">
-    <section class="py-5">
+    <section class="py-5" style="height: 600px">
         <div class="container px-4 px-lg-5 my-5">
-            <div class="row gx-4 gx-lg-5 align-items-center">
-                <div class="col-md-6">
-                    <img class="card-img-top mb-5 mb-md-0"
-                         th:src="${item.titleImageUrl}" alt="..."></div>
-                <div class="col-md-6">
+            <div class="row gx-4 gx-lg-5">
+                <div id="carouselExampleIndicators" style="height: 400px"
+                     class="carousel carousel-dark slide col-md-6" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button th:each="url, var : ${item.allImagesUrls}" type="button"
+                                data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${var.index+1}"
+                                th:aria-label="${'Slide'+var.index+1}"></button>
+                    </div>
+                    <div class="carousel-inner d-flex align-items-center h-100">
+                        <div class="carousel-item active ">
+                            <div class="d-flex">
+                                <img th:src="${item.titleImageUrl}" class="mx-auto"
+                                     style="max-height: 400px; max-width: 500px" alt="...">
+                            </div>
+                        </div>
+                        <div class="carousel-item" th:each="url : ${item.allImagesUrls}">
+                            <div class="d-flex">
+                                <img th:src="${url}" class="mx-auto"
+                                     style="max-height: 400px; max-width: 500px" alt="...">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div class="col-md-6" style="height: 400px">
                     <div class="small mb-1" th:text="${item.series}">model</div>
                     <h1 class="display-5 fw-bolder" th:text="${item.brand+' '+item.model}">title</h1>
                     <div class="fs-5 mb-5">
@@ -26,7 +56,7 @@
                     <p class="card-text m-1" th:each="s : ${item.description.split('; ')}" th:text="${s}">
                         description</p>
                     <div class="d-flex">
-                        <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1"
+                        <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1"
                                aria-label="Quantity" style="max-width: 3rem">
                         <button class="btn btn-outline-dark flex-shrink-0" type="button"
                                 th:onclick="'addToBucket(\'' + ${item.id} + '\');'">

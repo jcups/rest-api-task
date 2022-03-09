@@ -41,7 +41,6 @@ public class Item extends DefaultEntity {
     @Column(nullable = false)
     String description;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     Set<String> allImagesUrls;
 

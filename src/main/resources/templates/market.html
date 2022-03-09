@@ -16,8 +16,11 @@
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="items"></div>
     </div>
+    <ul class='pagination justify-content-center' id='pageable'></ul>
 </div>
-<script>loadData()</script>
+
 <th:block th:insert="fragments/footer"/>
+
+<script>loadMarket(0)</script>
 </body>
 </html>

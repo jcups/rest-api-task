@@ -9,8 +9,6 @@ spring:
       ddl-auto: validate
   flyway:
     baseline-on-migrate: true
-#  main:
-#    allow-circular-references: true
 logging:
   level:
     org.springframework:
@@ -24,11 +22,3 @@ logging:
       hibernate:
         SQL: debug
         type.descriptor.sql.BasicBinder: trace
-#    org.postgresql: debug
-#server:
-#  servlet:
-#    session:
-#      timeout: 15m
-#      cookie:
-#        http-only: true
-#        secure: true

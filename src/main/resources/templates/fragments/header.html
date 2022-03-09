@@ -13,7 +13,9 @@
                     <li><a th:href="@{/}" class="nav-link px-2 link-secondary">CompanyName</a></li>
                     <li><a th:href="@{/market}" class="nav-link px-2 link-dark">Market</a></li>
                     <li><a th:href="@{/bucket}" class="nav-link px-2 link-dark">Bucket</a></li>
-                    <!--                    <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>-->
+                    <li sec:authorize="hasAnyRole('ADMIN', 'CREATOR')">
+                        <a th:href="@{/users}" class="nav-link px-2 link-dark">Users</a>
+                    </li>
                 </ul>
 
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">

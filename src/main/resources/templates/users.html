@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <th:block th:insert="fragments/bootstrap"/>
+    <script th:src="@{../js/script.js}"></script>
+    <script th:src="@{../js/users.js}"></script>
+</head>
+<body>
+<th:block th:insert="fragments/header"/>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead id="usersHead">
+        </thead>
+        <tbody id="usersBody">
+        </tbody>
+    </table>
+    <ul class='pagination justify-content-center' id='pageable'></ul>
+</div>
+
+<th:block th:insert="fragments/footer"/>
+
+<script>loadUsers(0)</script>
+</body>
+</html>

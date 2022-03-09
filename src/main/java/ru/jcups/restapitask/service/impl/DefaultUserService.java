@@ -2,6 +2,9 @@ package ru.jcups.restapitask.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,6 +36,13 @@ public class DefaultUserService extends DefaultCrudService<User> implements User
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    public Page<User> findAllAtPage(int page, int quantity){
+        logger.info("DefaultUserService.findAllAtPage");
+        logger.info("findAllAtPage() called with: page = [" + page + "], quantity = [" + quantity + "]");
+        Pageable pageable = PageRequest.of(page, quantity);
+        return userRepository.findAll(pageable);
+    }
+
     @Override
     public User create(User user) {
         logger.info("DefaultUserService.create");
@@ -48,6 +58,12 @@ public class DefaultUserService extends DefaultCrudService<User> implements User
         return created;
     }
 
+    public boolean isUsernameNotUsed(String username){
+        logger.info("DefaultUserService.ifExistsByUsername");
+        logger.info("ifExistsByUsername() called with: username = [" + username + "]");
+        return userRepository.findUserByUsername(username) == null;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("DefaultUserService.loadUserByUsername");
@@ -59,5 +75,23 @@ public class DefaultUserService extends DefaultCrudService<User> implements User
         }
         logger.debug("DefaultUserService.loadUserByUsername() returned: " + user);
         return user;
+    }
+
+    @Override
+    public void appendRoleToUser(long id, Role role) {
+        logger.info("DefaultUserService.appendRoleToUser");
+        logger.info("appendRoleToUser() called with: id = [" + id + "], role = [" + role + "]");
+        User user = this.getById(id);
+        user.getRoles().add(role);
+        this.update(user);
+    }
+
+    @Override
+    public void deleteRoleOfUser(long id, Role roleVal) {
+        logger.info("DefaultUserService.deleteRoleOfUser");
+        logger.info("deleteRoleOfUser() called with: id = [" + id + "], roleVal = [" + roleVal + "]");
+        User user = this.getById(id);
+        user.getRoles().remove(roleVal);
+        this.update(user);
     }
 }

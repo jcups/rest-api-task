@@ -1,4 +1,4 @@
-package ru.jcups.restapitask.controller.rest;
+package ru.jcups.restapitask.controller.rest.api;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;

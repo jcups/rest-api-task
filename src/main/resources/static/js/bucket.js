@@ -71,7 +71,6 @@ function loadBucket() {
             deleteButton.onclick = () => sendDelete('/api/bucket/' + item.id, () => {
                 if (xhr.response.status === 200){
                     console.log('successful delete');
-                    // reloadBucket();todo reloadBucket for dynamic delete;
                 }
             });
             actionsDiv.appendChild(deleteButton)

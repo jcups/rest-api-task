@@ -2,6 +2,8 @@ package ru.jcups.restapitask.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.jcups.restapitask.model.Bucket;
 import ru.jcups.restapitask.model.Item;
@@ -53,6 +55,13 @@ public class DefaultItemService extends DefaultCrudService<Item> implements Item
         }
         logger.debug("DefaultItemService.getItemsLimitFour() returned: " + items);
         return items;
+    }
+
+    @Override
+    public Page<Item> findAllAtPage(int page, int quantity) {
+        logger.info("DefaultItemService.findAllAtPage");
+        logger.info("findAllAtPage() called with: page = [" + page + "], quantity = [" + quantity + "]");
+        return itemRepository.findAll(PageRequest.of(page, quantity));
     }
 
 }

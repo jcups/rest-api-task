@@ -20,7 +20,7 @@ public class Bucket extends DefaultEntity {
     @OneToOne
     User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "buckets_items", joinColumns = @JoinColumn(name = "bucket_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     List<Item> items;

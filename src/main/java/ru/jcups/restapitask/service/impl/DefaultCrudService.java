@@ -90,7 +90,6 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
         return !repository.existsById(id);
     }
 
-    // TODO: 01.03.2022 Попробовать переделать с помощью ReflectionUtils от Spring
     private void init() {
         logger.info("DefaultCrudService.init");
         Class<?> actualClass = this.getClass();

@@ -31,7 +31,7 @@ public class ItemParser {
         logger.info("ItemParser.parseItem");
         logger.info("parseItem() called with: uri = [" + uri + "]");
         Document document = getDocument(uri);
-        return Item.builder()
+        Item item = Item.builder()
                 .titleImageUrl(getTitleImageUrl(document))
                 .title(getTitle(document))
                 .brand(brand)
@@ -42,6 +42,12 @@ public class ItemParser {
                 .params(getParams(document))
                 .description(getDescription())
                 .build();
+        Set<String> images = item.getAllImagesUrls();
+        if (images.contains(item.getTitleImageUrl())) {
+            images.remove(item.getTitleImageUrl());
+            item.setAllImagesUrls(images);
+        }
+        return item;
     }
 
     private static String getTitleImageUrl(Document document) {
