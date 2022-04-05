@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @Scope("session")
 public class Guest {
 
-    Bucket bucket;
+	Bucket bucket;
 
-    public Guest() {
-        this.bucket = new Bucket();
-    }
+	public Guest() {
+		this.bucket = new Bucket();
+	}
 
-    public void addItemToBucket(Item item, int quantity){
-        bucket.addItem(item, quantity);
-    }
+	public void addItemToBucket(Item item, int quantity) {
+		bucket.addItem(item, quantity);
+	}
 }

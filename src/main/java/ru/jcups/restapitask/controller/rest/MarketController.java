@@ -38,7 +38,7 @@ public class MarketController {
         mav.setViewName("item");
         try {
             model.addAttribute("item", itemService.getById(id));
-            model.addAttribute("ratable", itemService.getItemsLimitFour());
+//            model.addAttribute("ratable", itemService.getItemsLimitFour());
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();
             mav.setViewName("redirect:/market");

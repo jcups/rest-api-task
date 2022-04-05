@@ -18,7 +18,7 @@
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
                                 class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button th:each="url, var : ${item.allImagesUrls}" type="button"
+                        <button th:each="url, var : ${item.getImages}" type="button"
                                 data-bs-target="#carouselExampleIndicators" th:data-bs-slide-to="${var.index+1}"
                                 th:aria-label="${'Slide'+var.index+1}"></button>
                     </div>
@@ -29,7 +29,7 @@
                                      style="max-height: 400px; max-width: 500px" alt="...">
                             </div>
                         </div>
-                        <div class="carousel-item" th:each="url : ${item.allImagesUrls}">
+                        <div class="carousel-item" th:each="url : ${item.getImages}">
                             <div class="d-flex">
                                 <img th:src="${url}" class="mx-auto"
                                      style="max-height: 400px; max-width: 500px" alt="...">

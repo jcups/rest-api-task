@@ -20,6 +20,16 @@ import java.util.Set;
 
 public class ItemParser {
 
+
+    /**todo
+     * Add parsers for this pages:
+     * https://www.lenovo.com/us/en/laptops/subseries-results?visibleDatas=991:Legion
+     * https://www.hp.com/us-en/shop/vwa/laptops/segm=Home?jumpid=ma_lt_featured_na_6_210303
+     * https://www.walmart.com/browse/electronics/gaming-laptops/3944_3951_1089430_1230091_1094888
+     * https://www.asus.com/us/Laptops/For-Gaming/All-series/filter?Series=ROG-Republic-of-Gamers&SubSeries=ROG-Zephyrus,ROG-Flow,ROG-Strix
+     * https://www.asus.com/us/Laptops/For-Gaming/All-series/filter?Series=TUF-Gaming
+     */
+
     private static final Logger logger = LoggerFactory.getLogger(ItemParser.class);
 
     private static String model;
@@ -32,21 +42,21 @@ public class ItemParser {
         logger.info("parseItem() called with: uri = [" + uri + "]");
         Document document = getDocument(uri);
         Item item = Item.builder()
-                .titleImageUrl(getTitleImageUrl(document))
+//                .titleImageUrl(getTitleImageUrl(document))
                 .title(getTitle(document))
-                .brand(brand)
-                .model(model)
-                .series(series)
+//                .brand(brand)
+//                .model(model)
+//                .series(series)
                 .price(getPrice(document))
-                .allImagesUrls(getImagesUrls(document))
-                .params(getParams(document))
+//                .allImagesUrls(getImagesUrls(document))
+//                .params(getParams(document))
                 .description(getDescription())
                 .build();
-        Set<String> images = item.getAllImagesUrls();
-        if (images.contains(item.getTitleImageUrl())) {
-            images.remove(item.getTitleImageUrl());
-            item.setAllImagesUrls(images);
-        }
+//        Set<String> images = item.getImages();
+//        if (images.contains(item.getTitleImageUrl())) {
+//            images.remove(item.getTitleImageUrl());
+//            item.setAllImagesUrls(images);
+//        }
         return item;
     }
 

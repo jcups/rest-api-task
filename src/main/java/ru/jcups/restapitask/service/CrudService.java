@@ -14,8 +14,6 @@ public interface CrudService<T extends DefaultEntity> {
 
     T getById(long id);
 
-    boolean delete(T t);
-
     boolean deleteById(long id);
 
 }

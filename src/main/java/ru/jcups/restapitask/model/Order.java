@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -21,65 +20,79 @@ import java.util.Objects;
 @Table(name = "orders")
 public class Order extends DefaultEntity {
 
-    @CreationTimestamp
-    LocalDate createdDate;
+	@CreationTimestamp
+	LocalDate createdDate;
 
-    @UpdateTimestamp
-    LocalDate updateDate;
+	@UpdateTimestamp
+	LocalDate updateDate;
 
-    @ManyToOne
-    User user;
+	@ManyToOne
+	User user;
 
-    BigDecimal sum;
+	BigDecimal sum;
 
-    @Enumerated(EnumType.STRING)
-    OrderStatus status;
+	@Enumerated(EnumType.STRING)
+	OrderStatus status;
 
-    @ManyToMany
-    @JoinTable(name = "orders_items", joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "item_id"))
-    List<Item> items;
+	@ManyToMany
+	@JoinTable(name = "orders_items", joinColumns = @JoinColumn(name = "order_id"),
+			inverseJoinColumns = @JoinColumn(name = "item_id"))
+	List<Item> items;
 
-    @Override
-    public void refresh(DefaultEntity entity) {
-        Order order = (Order) entity;
-        if (order.updateDate != null)
-            this.updateDate = order.updateDate;
-        if (order.sum != null)
-            this.sum = order.sum;
-        if (order.status != null)
-            this.status = order.status;
-        if (order.items != null)
-            this.items = order.items;
-    }
+	@Override
+	public void refresh(DefaultEntity entity) {
+		Order order = (Order) entity;
+		if (order.updateDate != null)
+			this.updateDate = order.updateDate;
+		if (order.sum != null)
+			this.sum = order.sum;
+		if (order.status != null)
+			this.status = order.status;
+		if (order.items != null)
+			this.items = order.items;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return id == order.id && Objects.equals(createdDate, order.createdDate)
-                && Objects.equals(updateDate, order.updateDate) && Objects.equals(user, order.user)
-                && Objects.equals(sum, order.sum) && status == order.status && Objects.equals(items, order.items);
-    }
+	@EqualsAndHashCode(callSuper = true)
+	@Entity
+	@Data
+	@FieldDefaults(level = AccessLevel.PRIVATE)
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@Builder
+	@Table(name = "order_parts")
+	public static class OrderPart extends DefaultEntity {
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user);
-    }
+		BigDecimal amount;
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", createdDate=" + createdDate +
-                ", updateDate=" + updateDate +
-                ", user=" + user +
-                ", sum=" + sum +
-                ", status=" + status +
-                ", items=" + items +
-                '}';
-    }
+		BigDecimal sum;
 
+		@ManyToOne
+		@JoinColumn(name = "item_id")
+		Item item;
+
+		@ManyToOne
+		@JoinColumn(name = "order_id")
+		Order order;
+
+		public OrderPart(Order order, Item item, long amount) {
+			this.order = order;
+			this.item = item;
+			this.amount = new BigDecimal(amount);
+			this.sum = new BigDecimal(item.getPrice().longValue() * amount);
+		}
+
+		@Override
+		public void refresh(DefaultEntity entity) {
+			OrderPart part = (OrderPart) entity;
+			if (part.amount != null)
+				this.amount = part.amount;
+			if (part.sum != null)
+				this.sum = part.sum;
+		}
+	}
+
+	public enum OrderStatus {
+		NEW, APPROVED, CANCELED, PAID, CLOSED
+	}
 
 }

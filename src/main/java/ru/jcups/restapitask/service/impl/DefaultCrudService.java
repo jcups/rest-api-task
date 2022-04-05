@@ -26,15 +26,11 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public T create(T t) {
-        logger.info(clazzName+".create");
-        logger.info("create() called with: t = [" + t + "]");
         return repository.save(t);
     }
 
     @Override
     public T update(T t) {
-        logger.info(clazzName+".update");
-        logger.info("update() called with: t = [" + t + "]");
         if (repository.existsById(t.getId())) {
             Optional<T> entity = repository.findById(t.getId());
             T found;
@@ -50,7 +46,6 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public List<T> getAll() {
-        logger.info(clazzName+".getAll");
         List<T> result = (List<T>) repository.findAll();
         if (result.isEmpty())
             throw new ObjectNotFoundException(clazz, clazzName);
@@ -59,8 +54,6 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
 
     @Override
     public T getById(long id) {
-        logger.info(clazzName+".getById");
-        logger.info("getById() called with: id = [" + id + "]");
         Optional<T> found = repository.findById(id);
         if (found.isPresent())
             return found.get();
@@ -69,20 +62,7 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
     }
 
     @Override
-    public boolean delete(T t) {
-        logger.info(clazzName+".delete");
-        logger.info("delete() called with: t = [" + t + "]");
-        if (repository.existsById(t.getId()))
-            repository.delete(t);
-        else
-            throw new ObjectNotFoundException(clazz, clazzName);
-        return !repository.existsById(t.getId());
-    }
-
-    @Override
     public boolean deleteById(long id) {
-        logger.info(clazzName+".deleteById");
-        logger.info("deleteById() called with: id = [" + id + "]");
         if (repository.existsById(id))
             repository.deleteById(id);
         else
@@ -91,7 +71,6 @@ public abstract class DefaultCrudService<T extends DefaultEntity> implements Cru
     }
 
     private void init() {
-        logger.info("DefaultCrudService.init");
         Class<?> actualClass = this.getClass();
         ParameterizedType type = (ParameterizedType) actualClass.getGenericSuperclass();
         clazz = (Class<T>) type.getActualTypeArguments()[0];

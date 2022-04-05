@@ -39,7 +39,7 @@ public class RegistrationController {
         if (user.getPassword().equals(user.getConfirmPassword())) {
             Guest guest = (Guest) session.getAttribute("guest");
             if (guest !=null){
-                user.setBucket(guest.getBucket());
+                user.getInfo().setBucket(guest.getBucket());
             }
             userService.create(user);
             return "redirect:/";

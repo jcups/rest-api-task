@@ -10,6 +10,6 @@ import ru.jcups.restapitask.model.Role;
 @NoArgsConstructor
 @Builder
 public class RoleDTO {
-    Role role;
-    RoleAction action;
+	Role role;
+	RoleAction action;
 }

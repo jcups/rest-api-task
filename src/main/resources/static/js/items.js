@@ -69,7 +69,7 @@ function loadMarket(pageNum) {
         }
 
     }
-
+    //todo  fix bag with pagination
     loadNav(page,
         () => loadMarket(page.number - 1),
         () => loadMarket(parseInt(page.number)),

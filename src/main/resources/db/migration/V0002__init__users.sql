@@ -1,8 +1,8 @@
-INSERT INTO users (first_name, last_name, age, email, username, password)
-	VALUES ('name', 'lastName', 21, 'admin@gmail.com', 'admin',
+INSERT INTO users ( email, username, password)
+	VALUES ('admin@gmail.com', 'admin',
 			'$2a$10$0Gnzm3FVpaXvQG8PiPsVDegSZd8rA6nRKW69ILgB8KUBZxVlDYmbi');
-INSERT INTO users (first_name, last_name, age, email, username, password)
-	VALUES ('Candace', 'Mardlin', 25, 'cmardlin0@nbcnews.com', 'cmardlin0', '686151a545938b67809d6bfc171db955d24a9911');
+INSERT INTO users (email, username, password)
+	VALUES ('cmardlin0@nbcnews.com', 'cmardlin0', '686151a545938b67809d6bfc171db955d24a9911');
 INSERT INTO users (first_name, last_name, age, email, username, password)
 	VALUES ('Garald', 'Mannock', 60, 'gmannock1@mozilla.com', 'gmannock1', '686151a545938b67809d6bfc171db955d24a9911');
 INSERT INTO users (first_name, last_name, age, email, username, password)

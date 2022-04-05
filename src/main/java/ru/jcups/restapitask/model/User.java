@@ -9,137 +9,144 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "users")
 public class User extends DefaultEntity implements UserDetails {
 
-    @NotNull
-    @Size(min = 2, max = 128, message = "First name length should be between 2 and 128 chars")
-    String firstName;
+	String token;
 
-    @NotNull
-    @Size(min = 2, max = 128, message = "Surname length should be between 2 and 128 chars")
-    String lastName;
+	@Size(min = 4, max = 32, message = "Login length should be between 4 and 16 characters")
+	@Column(unique = true, nullable = false)
+	String username;
 
-    @NotNull
-    @Min(value = 18, message = "If you are under the age of 18, please return when you reach the required age")
-    int age;
+	@Email(message = "Please enter a valid email")
+	@Column(unique = true, nullable = false)
+	String email;
 
-    @Email(message = "Please enter a valid email")
-    @Column(unique = true, nullable = false)
-    String email;
+	@Size(min = 4, max = 128, message = "Password length should be between 4 and 128 characters")
+	@Column(nullable = false)
+	String password;
 
-    @Size(min = 4, max = 32, message = "Login length should be between 4 and 16 characters")
-    @Column(unique = true, nullable = false)
-    String username;
+	@Transient
+	String confirmPassword;
 
-    @NotNull
-    @Size(min = 4, max = 128, message = "Password length should be between 4 and 128 characters")
-    String password;
+	@Enumerated(EnumType.STRING)
+	@ElementCollection(fetch = FetchType.EAGER)
+	Set<Role> roles;
 
-    @Transient
-    String confirmPassword;
+	@OneToOne(cascade = CascadeType.ALL)
+	Info info;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    Set<Role> roles;
+	public User() {
+		this.info = new Info();
+		this.token = UUID.randomUUID().toString();
+	}
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    @JsonIgnoreProperties(value = "user")
-    Bucket bucket;
+	public boolean isPasswordConfirmed(){
+		return password.equals(confirmPassword);
+	}
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    List<Order> orders;
+	public Role getMaxPriorityRole() {
+		return roles.stream().max(Comparator.comparingInt(Enum::ordinal)).get();
+	}
 
-    @Override
-    public void refresh(DefaultEntity entity) {
-        User user = (User) entity;
-        if (user.firstName != null)
-            this.firstName = user.firstName;
-        if (user.lastName != null)
-            this.lastName = user.lastName;
-        if (user.age >= 18)
-            this.age = user.age;
-        if (user.username != null)
-            this.username = user.username;
-        if (user.password != null)
-            this.password = user.password;
-    }
+	@Override
+	public void refresh(DefaultEntity entity) {
+		User user = (User) entity;
+		if (user.username != null)
+			this.username = user.username;
+		if (user.password != null)
+			this.password = user.password;
+		if (user.info != null)
+			this.info.refresh(user.info);
+		if (user.roles != null)
+			this.roles = user.roles;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
+	@Override
+	public String getUsername() {
+		return username;
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.getId() && age == user.age &&
-                firstName.equals(user.firstName) && lastName.equals(user.lastName)
-                && email.equals(user.email) && username.equals(user.username)
-                && password.equals(user.password) && roles.equals(user.roles);
-    }
+	@Getter
+	@Setter
+	@FieldDefaults(level = AccessLevel.PRIVATE)
+	@AllArgsConstructor
+	@Builder
+	@Entity(name = "users_info")
+	public static class Info extends DefaultEntity {
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(firstName, lastName, age, email, username, password, roles);
-    }
+//		@OneToOne(mappedBy = "info")
+//		User user;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", surname='" + lastName + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + roles +
-                "}";
-    }
+		@Size(min = 2, max = 128, message = "First name length should be between 2 and 128 chars")
+		String firstName;
+
+		@Size(min = 2, max = 128, message = "Surname length should be between 2 and 128 chars")
+		String lastName;
+
+		@Min(value = 18, message = "If you are under the age of 18, please return when you reach the required age")
+		Integer age;
+
+		@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+		@JsonIgnoreProperties(value = "user")
+		Bucket bucket;
+
+		@OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+		List<Order> orders;
+
+		public Info() {
+			this.bucket = new Bucket();
+		}
+
+		@Override
+		public void refresh(DefaultEntity entity) {
+			Info info = (Info) entity;
+			if (info.firstName != null)
+				this.firstName = info.firstName;
+			if (info.lastName != null)
+				this.lastName = info.lastName;
+			if (info.age != null)
+				if (info.age >= 18)
+					this.age = info.age;
+		}
+	}
 }

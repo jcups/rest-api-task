@@ -1,8 +1,10 @@
 package ru.jcups.restapitask.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.jcups.restapitask.model.Role;
+import ru.jcups.restapitask.model.User;
 
 import java.util.Set;
 
@@ -12,12 +14,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class UserDTO {
-
-    long id;
-    String firstName;
-    String lastName;
-    int age;
-    String email;
-    String username;
-    Set<Role> roles;
+	long id;
+	String email;
+	String username;
+	Set<Role> roles;
+	@JsonIgnoreProperties("user")
+	User.Info info;
 }
