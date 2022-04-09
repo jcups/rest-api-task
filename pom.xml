@@ -11,7 +11,7 @@
     <groupId>ru.jcups</groupId>
     <artifactId>rest-api-task</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>rest-api-task</name>
     <description>rest-api-task</description>
     <properties>
